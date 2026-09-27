@@ -1,6 +1,6 @@
 const JOURS_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
-export default function ElevesList({ eleves, onSelectEleve, onAddNew, onImportDefault, onExport, onImportFile, onShowCours, coursCount }) {
+export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, coursCount }) {
   const sortEleves = (list) => {
     return [...list].sort((a, b) => {
       const dayA = JOURS_ORDER.indexOf(a.jour || '')
@@ -31,11 +31,9 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onImportDe
       {eleves.length === 0 ? (
         <div className="empty-state-container">
           <p className="empty-state">Aucun eleve</p>
-          {onImportDefault && (
-            <button className="btn-primary" onClick={onImportDefault} style={{ marginTop: '20px', width: '100%' }}>
-              Importer 30 eleves
-            </button>
-          )}
+          <button className="btn-primary" onClick={onPasteImport} style={{ marginTop: '20px', width: '100%' }}>
+            Coller un export
+          </button>
         </div>
       ) : (
         <>
@@ -62,7 +60,7 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onImportDe
 
           <div className="data-actions">
             <button className="btn-secondary" onClick={onExport}>Exporter</button>
-            <button className="btn-secondary" onClick={onImportFile}>Importer</button>
+            <button className="btn-secondary" onClick={onPasteImport}>Coller export</button>
           </div>
         </>
       )}
