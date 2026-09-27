@@ -6,8 +6,6 @@ import FormAddEleve from './components/FormAddEleve'
 import CoursList from './components/CoursList'
 import FicheDetail from './components/FicheDetail'
 import FormFiche from './components/FormFiche'
-import { importElevesToLocalStorage } from './utils/importEleves'
-
 function App() {
   const [eleves, setEleves] = useState([])
   const [selectedEleve, setSelectedEleve] = useState(null)
@@ -17,6 +15,9 @@ function App() {
   const [selectedFiche, setSelectedFiche] = useState(null)
   const [showAddFicheForm, setShowAddFicheForm] = useState(false)
   const [ficheToEdit, setFicheToEdit] = useState(null)
+  const [showPasteModal, setShowPasteModal] = useState(false)
+  const [pasteText, setPasteText] = useState('')
+  const [pasteError, setPasteError] = useState('')
 
   useEffect(() => {
     const saved = localStorage.getItem('eleves')
@@ -98,16 +99,24 @@ function App() {
     }
   }
 
-  const handleImportDefault = () => {
-    if (eleves.length > 0) {
-      if (!confirm('Cela va remplacer tous les donnees. Continue?')) {
+  const handlePasteImport = () => {
+    setPasteError('')
+    try {
+      const data = JSON.parse(pasteText)
+      if (!data.eleves || !Array.isArray(data.eleves)) {
+        setPasteError('Format invalide : pas de champ "eleves"')
         return
       }
-    }
-    importElevesToLocalStorage()
-    const saved = localStorage.getItem('eleves')
-    if (saved) {
-      setEleves(JSON.parse(saved))
+      setEleves(data.eleves)
+      localStorage.setItem('eleves', JSON.stringify(data.eleves))
+      if (data.cours && Array.isArray(data.cours)) {
+        setCours(data.cours)
+        localStorage.setItem('cours', JSON.stringify(data.cours))
+      }
+      setShowPasteModal(false)
+      setPasteText('')
+    } catch {
+      setPasteError('JSON invalide, vérifie le texte collé')
     }
   }
 
@@ -168,40 +177,6 @@ function App() {
     alert('Donnees exportees!')
   }
 
-  const handleImportFile = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = '.json'
-    input.onchange = (e) => {
-      const file = e.target.files[0]
-      if (!file) return
-
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        try {
-          const data = JSON.parse(event.target.result)
-          if (data.eleves && Array.isArray(data.eleves)) {
-            if (confirm('Cela va remplacer tous les donnees importees. Continue?')) {
-              setEleves(data.eleves)
-              localStorage.setItem('eleves', JSON.stringify(data.eleves))
-              if (data.cours && Array.isArray(data.cours)) {
-                setCours(data.cours)
-                localStorage.setItem('cours', JSON.stringify(data.cours))
-              }
-              alert('Donnees importees avec succes!')
-            }
-          } else {
-            alert('Format de fichier invalide')
-          }
-        } catch (error) {
-          alert('Erreur lors de la lecture du fichier: ' + error.message)
-        }
-      }
-      reader.readAsText(file)
-    }
-    input.click()
-  }
-
   const inCours = showCours || selectedFiche || showAddFicheForm
   const showBack = selectedEleve || showAddForm || inCours
 
@@ -242,12 +217,33 @@ function App() {
           eleves={eleves}
           onSelectEleve={setSelectedEleve}
           onAddNew={() => setShowAddForm(true)}
-          onImportDefault={handleImportDefault}
           onExport={handleExport}
-          onImportFile={handleImportFile}
+          onPasteImport={() => setShowPasteModal(true)}
           onShowCours={() => setShowCours(true)}
           coursCount={cours.length}
         />
+      )}
+
+      {showPasteModal && (
+        <div className="modal-overlay" onClick={() => { setShowPasteModal(false); setPasteText(''); setPasteError('') }}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <h3>Coller un export</h3>
+            <p className="modal-hint">Colle le contenu JSON de ton dernier export</p>
+            <textarea
+              className="paste-textarea"
+              value={pasteText}
+              onChange={e => { setPasteText(e.target.value); setPasteError('') }}
+              placeholder='{"version":"1.0","eleves":[...],"cours":[...]}'
+              rows={10}
+              autoFocus
+            />
+            {pasteError && <p className="paste-error">{pasteError}</p>}
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => { setShowPasteModal(false); setPasteText(''); setPasteError('') }}>Annuler</button>
+              <button className="btn-primary" onClick={handlePasteImport} disabled={!pasteText.trim()}>Importer</button>
+            </div>
+          </div>
+        </div>
       )}
 
       {showAddForm && (
