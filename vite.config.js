@@ -11,14 +11,16 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
       manifest: {
-        name: 'Cedrik-Musik',
-        short_name: 'Cedrik-Musik',
+        name: 'CEDRIK-MUSIK',
+        short_name: 'CEDRIK-MUSIK',
         description: 'Suivi des élèves de guitare',
+        lang: 'fr',
         theme_color: '#0a0a0a',
         background_color: '#1a1a1a',
         display: 'standalone',
-        start_url: '/guitar-app/',
-        scope: '/guitar-app/',
+        orientation: 'portrait-primary',
+        start_url: './',
+        scope: './',
         icons: [
           {
             src: 'icon-192.png',
