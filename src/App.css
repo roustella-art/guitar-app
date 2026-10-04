@@ -853,3 +853,103 @@ button:active {
   flex-wrap: wrap;
   justify-content: center;
 }
+
+/* Journal */
+.journal-recherche {
+  width: 100%;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #ddd;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.journal-recherche::placeholder { color: #666; }
+
+.journal-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.journal-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journal-date {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #3a3a3a;
+  font-size: 13px;
+  color: #ddd;
+  letter-spacing: 1px;
+}
+
+.journal-jour {
+  color: #4caf50;
+  text-transform: uppercase;
+}
+
+.journal-compte {
+  margin-left: auto;
+  color: #777;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.journal-seance {
+  background: #242424;
+  border: 1px solid #3a3a3a;
+  border-left: 3px solid #4caf50;
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journal-seance:active { background: #2c2c2c; }
+
+.journal-seance-tete {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.journal-seance-tete strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.journal-heure {
+  margin-left: auto;
+  color: #888;
+  font-size: 12px;
+}
+
+.journal-champ {
+  margin: 0;
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.journal-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 2px;
+}

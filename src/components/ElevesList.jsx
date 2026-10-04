@@ -1,6 +1,8 @@
 const JOURS_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
-export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, coursCount }) {
+export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, onShowJournal, coursCount }) {
+  const totalSeances = eleves.reduce((n, e) => n + (e.seances?.length || 0), 0)
+
   const sortEleves = (list) => {
     return [...list].sort((a, b) => {
       const dayA = JOURS_ORDER.indexOf(a.jour || '')
@@ -22,6 +24,9 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
     <div className="list-container">
       <div className="list-header">
         <h2>ELEVES ({eleves.length})</h2>
+        <button className="btn-cours" onClick={onShowJournal}>
+          Journal{totalSeances > 0 ? ` (${totalSeances})` : ''}
+        </button>
         <button className="btn-cours" onClick={onShowCours}>
           Cours{coursCount > 0 ? ` (${coursCount})` : ''}
         </button>

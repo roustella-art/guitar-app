@@ -6,6 +6,7 @@ import FormAddEleve from './components/FormAddEleve'
 import CoursList from './components/CoursList'
 import FicheDetail from './components/FicheDetail'
 import FormFiche from './components/FormFiche'
+import Journal from './components/Journal'
 import Minuteur from './components/Minuteur'
 
 function App() {
@@ -17,9 +18,11 @@ function App() {
   const [selectedFiche, setSelectedFiche] = useState(null)
   const [showAddFicheForm, setShowAddFicheForm] = useState(false)
   const [ficheToEdit, setFicheToEdit] = useState(null)
+  const [showJournal, setShowJournal] = useState(false)
   const [showPasteModal, setShowPasteModal] = useState(false)
   const [pasteText, setPasteText] = useState('')
   const [pasteError, setPasteError] = useState('')
+  const [charge, setCharge] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('eleves')
@@ -34,15 +37,20 @@ function App() {
     }
     const savedCours = localStorage.getItem('cours')
     if (savedCours) setCours(JSON.parse(savedCours))
+    setCharge(true)
   }, [])
 
+  // Tant que la lecture initiale n'a pas eu lieu, l'état est encore vide :
+  // l'écrire écraserait les données déjà enregistrées.
   useEffect(() => {
+    if (!charge) return
     localStorage.setItem('eleves', JSON.stringify(eleves))
-  }, [eleves])
+  }, [eleves, charge])
 
   useEffect(() => {
+    if (!charge) return
     localStorage.setItem('cours', JSON.stringify(cours))
-  }, [cours])
+  }, [cours, charge])
 
   useEffect(() => {
     if (selectedEleve) {
@@ -180,7 +188,7 @@ function App() {
   }
 
   const inCours = showCours || selectedFiche || showAddFicheForm
-  const showBack = selectedEleve || showAddForm || inCours
+  const showBack = selectedEleve || showAddForm || inCours || showJournal
 
   const handleBack = () => {
     if (ficheToEdit) {
@@ -190,10 +198,13 @@ function App() {
       setSelectedFiche(null)
     } else if (showAddFicheForm) {
       setShowAddFicheForm(false)
+    } else if (selectedEleve) {
+      setSelectedEleve(null)
+    } else if (showJournal) {
+      setShowJournal(false)
     } else if (showCours) {
       setShowCours(false)
     } else {
-      setSelectedEleve(null)
       setShowAddForm(false)
     }
   }
@@ -208,13 +219,13 @@ function App() {
             </button>
           )}
           <h1>CEDRIK-MUSIK</h1>
-          {eleves.length > 0 && !selectedEleve && !showAddForm && !inCours && (
+          {eleves.length > 0 && !selectedEleve && !showAddForm && !inCours && !showJournal && (
             <button className="btn-reset" onClick={handleReset}>reset</button>
           )}
         </div>
       </header>
 
-      {!selectedEleve && !showAddForm && !inCours && (
+      {!selectedEleve && !showAddForm && !inCours && !showJournal && (
         <ElevesList
           eleves={eleves}
           onSelectEleve={setSelectedEleve}
@@ -222,8 +233,13 @@ function App() {
           onExport={handleExport}
           onPasteImport={() => setShowPasteModal(true)}
           onShowCours={() => setShowCours(true)}
+          onShowJournal={() => setShowJournal(true)}
           coursCount={cours.length}
         />
+      )}
+
+      {showJournal && !selectedEleve && (
+        <Journal eleves={eleves} onSelectEleve={setSelectedEleve} />
       )}
 
       {showPasteModal && (
