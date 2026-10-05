@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const JOURS_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
-export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, onShowJournal, coursCount }) {
+export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, onShowJournal, onShowPlanning, coursCount }) {
   const [voirArchives, setVoirArchives] = useState(false)
 
   const totalSeances = eleves.reduce((n, e) => n + (e.seances?.length || 0), 0)
@@ -31,6 +31,7 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
     <div className="list-container">
       <div className="list-header">
         <h2>{voirArchives ? 'ARCHIVES' : 'ELEVES'} ({visibles.length})</h2>
+        <button className="btn-cours" onClick={onShowPlanning}>Planning</button>
         <button className="btn-cours" onClick={onShowJournal}>
           Journal{totalSeances > 0 ? ` (${totalSeances})` : ''}
         </button>

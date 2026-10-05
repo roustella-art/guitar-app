@@ -7,6 +7,7 @@ import CoursList from './components/CoursList'
 import FicheDetail from './components/FicheDetail'
 import FormFiche from './components/FormFiche'
 import Journal from './components/Journal'
+import Planning from './components/Planning'
 
 function App() {
   const [eleves, setEleves] = useState([])
@@ -18,6 +19,7 @@ function App() {
   const [showAddFicheForm, setShowAddFicheForm] = useState(false)
   const [ficheToEdit, setFicheToEdit] = useState(null)
   const [showJournal, setShowJournal] = useState(false)
+  const [showPlanning, setShowPlanning] = useState(false)
   const [showPasteModal, setShowPasteModal] = useState(false)
   const [pasteText, setPasteText] = useState('')
   const [pasteError, setPasteError] = useState('')
@@ -187,7 +189,7 @@ function App() {
   }
 
   const inCours = showCours || selectedFiche || showAddFicheForm
-  const showBack = selectedEleve || showAddForm || inCours || showJournal
+  const showBack = selectedEleve || showAddForm || inCours || showJournal || showPlanning
 
   const handleBack = () => {
     if (ficheToEdit) {
@@ -201,6 +203,8 @@ function App() {
       setSelectedEleve(null)
     } else if (showJournal) {
       setShowJournal(false)
+    } else if (showPlanning) {
+      setShowPlanning(false)
     } else if (showCours) {
       setShowCours(false)
     } else {
@@ -218,13 +222,13 @@ function App() {
             </button>
           )}
           <h1>CEDRIK-MUSIK</h1>
-          {eleves.length > 0 && !selectedEleve && !showAddForm && !inCours && !showJournal && (
+          {eleves.length > 0 && !selectedEleve && !showAddForm && !inCours && !showJournal && !showPlanning && (
             <button className="btn-reset" onClick={handleReset}>reset</button>
           )}
         </div>
       </header>
 
-      {!selectedEleve && !showAddForm && !inCours && !showJournal && (
+      {!selectedEleve && !showAddForm && !inCours && !showJournal && !showPlanning && (
         <ElevesList
           eleves={eleves}
           onSelectEleve={setSelectedEleve}
@@ -233,12 +237,17 @@ function App() {
           onPasteImport={() => setShowPasteModal(true)}
           onShowCours={() => setShowCours(true)}
           onShowJournal={() => setShowJournal(true)}
+          onShowPlanning={() => setShowPlanning(true)}
           coursCount={cours.length}
         />
       )}
 
       {showJournal && !selectedEleve && (
         <Journal eleves={eleves} onSelectEleve={setSelectedEleve} />
+      )}
+
+      {showPlanning && !selectedEleve && (
+        <Planning eleves={eleves} onSelectEleve={setSelectedEleve} />
       )}
 
       {showPasteModal && (
