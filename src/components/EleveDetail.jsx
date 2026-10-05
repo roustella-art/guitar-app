@@ -43,6 +43,7 @@ export default function EleveDetail({ eleve, onAddSeance, onBack, onDelete, onUp
     <div className="detail-container">
       <div className="eleve-header">
         <h2>{eleve.prenom} {eleve.nom}</h2>
+        {eleve.archive && <span className="badge-archive">archivé</span>}
         <button className="btn-delete" onClick={handleDelete}>supprimer</button>
       </div>
 
@@ -67,13 +68,17 @@ export default function EleveDetail({ eleve, onAddSeance, onBack, onDelete, onUp
             </div>
           </div>
 
-          <button 
-            className="btn-primary wide" 
-            onClick={() => setShowEditForm(true)}
-            style={{ marginBottom: '20px' }}
-          >
-            Modifier
-          </button>
+          <div className="eleve-actions">
+            <button className="btn-primary" onClick={() => setShowEditForm(true)}>
+              Modifier
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => onUpdate({ archive: !eleve.archive })}
+            >
+              {eleve.archive ? 'Réactiver' : 'Archiver'}
+            </button>
+          </div>
 
           {!showForm ? (
             <button className="btn-primary wide" onClick={() => setShowForm(true)}>
