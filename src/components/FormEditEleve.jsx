@@ -12,6 +12,7 @@ export default function FormEditEleve({ eleve, onSave, onCancel }) {
     niveau: eleve.niveau || "",
     jour: eleve.jour || "",
     heure: eleve.heure || "",
+    lieu: eleve.lieu || "ext",
     instruments: eleve.instruments || []
   })
 
@@ -113,6 +114,14 @@ export default function FormEditEleve({ eleve, onSave, onCancel }) {
               placeholder="09h00"
             />
           </div>
+        </div>
+
+        <div className="form-group">
+          <label>Lieu du cours</label>
+          <select name="lieu" value={formData.lieu} onChange={handleChange}>
+            <option value="ext">A l'exterieur</option>
+            <option value="chez">Chez moi</option>
+          </select>
         </div>
 
         <div className="form-group">

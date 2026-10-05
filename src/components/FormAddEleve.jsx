@@ -10,6 +10,7 @@ export default function FormAddEleve({ onAdd, onCancel }) {
     email: '',
     telephone: '',
     niveau: '',
+    lieu: 'ext',
     jour: '',
     heure: '',
     instruments: []
@@ -36,7 +37,7 @@ export default function FormAddEleve({ onAdd, onCancel }) {
       return
     }
     onAdd(formData)
-    setFormData({ nom: '', prenom: '', email: '', telephone: '', niveau: '', jour: '', heure: '', instruments: [] })
+    setFormData({ nom: '', prenom: '', email: '', telephone: '', niveau: '', lieu: 'ext', jour: '', heure: '', instruments: [] })
   }
 
   return (
@@ -119,6 +120,14 @@ export default function FormAddEleve({ onAdd, onCancel }) {
               placeholder="09h00"
             />
           </div>
+        </div>
+
+        <div className="form-group">
+          <label>Lieu du cours</label>
+          <select name="lieu" value={formData.lieu} onChange={handleChange}>
+            <option value="ext">A l'exterieur</option>
+            <option value="chez">Chez moi</option>
+          </select>
         </div>
 
         <div className="form-group">
