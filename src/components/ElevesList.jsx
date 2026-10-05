@@ -1,7 +1,14 @@
+import { useState } from 'react'
+
 const JOURS_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
 export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, onShowJournal, coursCount }) {
+  const [voirArchives, setVoirArchives] = useState(false)
+
   const totalSeances = eleves.reduce((n, e) => n + (e.seances?.length || 0), 0)
+  const actifs = eleves.filter(e => !e.archive)
+  const archives = eleves.filter(e => e.archive)
+  const visibles = voirArchives ? archives : actifs
 
   const sortEleves = (list) => {
     return [...list].sort((a, b) => {
@@ -18,12 +25,12 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
     })
   }
 
-  const sortedEleves = sortEleves(eleves)
+  const sortedEleves = sortEleves(visibles)
 
   return (
     <div className="list-container">
       <div className="list-header">
-        <h2>ELEVES ({eleves.length})</h2>
+        <h2>{voirArchives ? 'ARCHIVES' : 'ELEVES'} ({visibles.length})</h2>
         <button className="btn-cours" onClick={onShowJournal}>
           Journal{totalSeances > 0 ? ` (${totalSeances})` : ''}
         </button>
@@ -42,6 +49,12 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
         </div>
       ) : (
         <>
+          {sortedEleves.length === 0 && (
+            <p className="empty-state">
+              {voirArchives ? 'Aucun élève archivé' : 'Tous les élèves sont archivés'}
+            </p>
+          )}
+
           <div className="eleves-grid">
             {sortedEleves.map(eleve => (
               <div
@@ -64,6 +77,12 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
           </div>
 
           <div className="data-actions">
+            <button
+              className={`btn-secondary ${voirArchives ? 'btn-actif' : ''}`}
+              onClick={() => setVoirArchives(v => !v)}
+            >
+              {voirArchives ? `← Élèves (${actifs.length})` : `Archives (${archives.length})`}
+            </button>
             <button className="btn-secondary" onClick={onExport}>Exporter</button>
             <button className="btn-secondary" onClick={onPasteImport}>Coller export</button>
           </div>

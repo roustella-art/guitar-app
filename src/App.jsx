@@ -7,7 +7,6 @@ import CoursList from './components/CoursList'
 import FicheDetail from './components/FicheDetail'
 import FormFiche from './components/FormFiche'
 import Journal from './components/Journal'
-import Minuteur from './components/Minuteur'
 
 function App() {
   const [eleves, setEleves] = useState([])
@@ -306,8 +305,6 @@ function App() {
           onDelete={() => deleteFiche(selectedFiche.id)}
         />
       )}
-
-      <Minuteur />
     </div>
   )
 }
