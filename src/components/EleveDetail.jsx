@@ -2,6 +2,7 @@ import { useState } from 'react'
 import FormSeance from './FormSeance'
 import FormEditSeance from './FormEditSeance'
 import FormEditEleve from './FormEditEleve'
+import { plusRecenteDabord } from '../utils/dates'
 
 export default function EleveDetail({ eleve, onAddSeance, onBack, onDelete, onUpdate, onUpdateSeance, onDeleteSeance }) {
   const [showForm, setShowForm] = useState(() => {
@@ -109,7 +110,7 @@ export default function EleveDetail({ eleve, onAddSeance, onBack, onDelete, onUp
           <p className="empty-state">Aucune seance</p>
         ) : (
           <div className="seances-list">
-            {[...eleve.seances].reverse().map(seance => (
+            {[...eleve.seances].sort(plusRecenteDabord).map(seance => (
               <div key={seance.id}>
                 {editingSeanceId === seance.id ? (
                   <FormEditSeance

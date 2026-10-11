@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { versFr, aujourdhuiInput } from '../utils/dates'
 
 export default function FormSeance({ onAdd, onCancel, eleve }) {
   const draftKey = `draft_seance_${eleve.id}`
@@ -6,9 +7,12 @@ export default function FormSeance({ onAdd, onCancel, eleve }) {
   const [formData, setFormData] = useState(() => {
     try {
       const saved = localStorage.getItem(draftKey)
-      if (saved) return JSON.parse(saved)
+      if (saved) {
+        const draft = JSON.parse(saved)
+        return { date: aujourdhuiInput(), ...draft }
+      }
     } catch {}
-    return { travail: '', devoirs: '', notes: '' }
+    return { date: aujourdhuiInput(), travail: '', devoirs: '', notes: '' }
   })
   const [copied, setCopied] = useState(false)
 
@@ -29,9 +33,9 @@ export default function FormSeance({ onAdd, onCancel, eleve }) {
       alert('Remplis au moins le travail ou les devoirs')
       return
     }
-    onAdd(formData)
+    onAdd({ ...formData, date: versFr(formData.date) || undefined })
     localStorage.removeItem(draftKey)
-    setFormData({ travail: '', devoirs: '', notes: '' })
+    setFormData({ date: aujourdhuiInput(), travail: '', devoirs: '', notes: '' })
   }
 
   const handleCancel = () => {
@@ -77,10 +81,21 @@ export default function FormSeance({ onAdd, onCancel, eleve }) {
   return (
     <div className="form-seance">
       <h3>
-        SEANCE DU {new Date().toLocaleDateString('fr-FR')}
+        NOUVELLE SEANCE
         {hasDraft && <span className="draft-indicator"> [brouillon]</span>}
       </h3>
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Date du cours</label>
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            max={aujourdhuiInput()}
+          />
+        </div>
+
         <div className="form-group">
           <label>Travail fait</label>
           <textarea

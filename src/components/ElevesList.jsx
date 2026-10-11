@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { plusRecenteDabord } from '../utils/dates'
+
 const JOURS_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
 export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, onPasteImport, onShowCours, onShowJournal, onShowPlanning, coursCount }) {
@@ -71,7 +73,9 @@ export default function ElevesList({ eleves, onSelectEleve, onAddNew, onExport, 
                 <p className="level">{eleve.niveau}</p>
                 <p className="seances">{eleve.seances?.length || 0} seance{eleve.seances?.length !== 1 ? 's' : ''}</p>
                 {eleve.seances?.length > 0 && (
-                  <p className="last-session">derniere: {eleve.seances[eleve.seances.length - 1].date}</p>
+                  <p className="last-session">
+                    derniere: {[...eleve.seances].sort(plusRecenteDabord)[0].date}
+                  </p>
                 )}
               </div>
             ))}
